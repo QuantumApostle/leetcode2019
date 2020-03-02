@@ -1,49 +1,31 @@
 # Definition for a binary tree node.
-class TreeNode(object):
+class TreeNode:
     def __init__(self, x):
         self.val = x
         self.left = None
         self.right = None
 
 
-class Solution(object):
-    def findLeaves(self, root):
-        """
-        :type root: TreeNode
-        :rtype: List[List[int]]
-        """
+class Solution:
+    def findLeaves(self, root: TreeNode):
         if not root:
             return []
+
+        def find_leaves(root, current):
+            if root:
+                if not root.left and not root.right:
+                    current.append(root.val)
+                    return
+                root.left = find_leaves(root.left, current)
+                root.right = find_leaves(root.right, current)
+                return root
+
         res = []
-        while root.val != -1:
-            res.append(self.remove_leaves(root))
-            self.cut_leaves(root)
+        while root:
+            current = []
+            root = find_leaves(root, current)
+            res.append(current)
         return res
-
-    def cut_leaves(self, root):
-        if root:
-            if root.left:
-                if root.left.val == -1:
-                    root.left = None
-                else:
-                    self.cut_leaves(root.left)
-            if root.right:
-                if root.right.val == -1:
-                    root.right = None
-                else:
-                    self.cut_leaves(root.right)
-
-    def remove_leaves(self, root):
-        if root:
-            tmp = []
-            if not root.left and not root.right:
-                tmp.append(root.val)
-                root.val = -1
-                return tmp
-            else:
-                tmp += self.remove_leaves(root.left)
-                tmp += self.remove_leaves(root.right)
-                return tmp
 
 
 t1 = TreeNode(1)
