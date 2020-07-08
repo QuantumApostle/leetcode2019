@@ -1,0 +1,28 @@
+# Definition for a binary tree node.
+from typing import List
+
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+
+class Solution:
+    def postorderTraversal(self, root: TreeNode) -> List[int]:
+        stack = []
+        last_visited = None
+        ans = []
+        while root or stack:
+            if root:
+                stack.append(root)
+                root = root.left
+            else:
+                peek_node = stack[-1]
+                if peek_node.right and last_visited is not peek_node.right:
+                    root = peek_node.right
+                else:
+                    ans.append(peek_node.val)
+                    last_visited = stack.pop()
+        return ans
